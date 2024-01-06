@@ -1,4 +1,6 @@
-# trail
+# main python file
+
+# Level 0
 
 n1 = [[0, 3366, 2290, 3118, 1345, 854, 1176, 1291, 1707, 2160, 1606, 702, 1820, 1985, 1838, 1515, 3370, 1643, 2874, 1418],
      [3366, 0, 1076, 512, 2021, 2512, 2190, 2075, 1923, 1206, 1760, 2664, 1546, 1645, 1528, 1851, 376, 1723, 492, 1948],
@@ -51,4 +53,8 @@ def tsp(cost, n, c):
     return path
 
 optimal_path = tsp(n1, len(n1[0]), 0)
+dist = 0
+for i in range(len(optimal_path)-1):
+    dist += n1[i][i+1]
 print(f"The optimal path is {optimal_path}.")
+print(f"The optimal distance is {dist}.")
