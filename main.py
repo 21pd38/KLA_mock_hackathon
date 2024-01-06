@@ -28,43 +28,38 @@ n2 = [[0, 3366, 2290, 3118, 1345, 854, 1176, 1291, 1707, 2160, 1606, 702, 1820, 
 
 import sys
 
-def reduce_matrix(cost, n):
-    for i in range(n):
-        min_val = sys.maxsize
-        for j in range(n):
-            if cost[i][j] < min_val:
-                min_val = cost[i][j]
-        for j in range(n):
-            if cost[i][j] != sys.maxsize and cost[i][j] != 0:
-                cost[i][j] -= min_val
-
-def tsp(cost, n, c):
-    reduce_matrix(cost, n)
-    path = [c]
+def nearest_neighbor_algorithm(cost_matrix, start_node):
+    n = len(cost_matrix)
     visited = [False] * n
-    visited[c] = True
-    for i in range(n-1):
-        min_val = sys.maxsize
+    path = [start_node]
+    total_distance = 0
+
+    for _ in range(n - 1):
+        current_node = path[-1]
+        min_distance = sys.maxsize
         next_node = -1
-        for j in range(n):
-            if not visited[j] and cost[path[-1]][j] < min_val:
-                min_val = cost[path[-1]][j]
-                next_node = j
+
+        for neighbor in range(n):
+            if not visited[neighbor] and cost_matrix[current_node][neighbor] < min_distance:
+                min_distance = cost_matrix[current_node][neighbor]
+                next_node = neighbor
+
         path.append(next_node)
+        total_distance += min_distance
         visited[next_node] = True
-        reduce_matrix(cost, n)
 
-    dist = 0
-    for i in range(len(path)-1):
-        dist += n2[path[i]][path[i+1]]
-    dist += n2[path[-1]][path[c]]
-    return path, dist
+    total_distance += cost_matrix[path[-1]][start_node]
+    path.append(start_node)
 
-optimal_path, optimal_distance = tsp(n2, len(n2[0]), 20)
-optimal_path.append(20)
+    path.remove(start_node)
+    return path, total_distance
+
+start_node = 20
+optimal_path, optimal_distance = nearest_neighbor_algorithm(n2, start_node)
+
 print(f"The optimal path is {optimal_path}.")
-print(len(optimal_path))
 print(f"The optimal distance is {optimal_distance}.")
+
 
 # Level 1A
 print("----------------------------------------")
