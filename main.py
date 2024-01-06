@@ -57,8 +57,26 @@ def nearest_neighbor_algorithm(cost_matrix, start_node):
 start_node = 20
 optimal_path, optimal_distance = nearest_neighbor_algorithm(n2, start_node)
 
-print(f"The optimal path is {optimal_path}.")
+optimal_path1 = []
+for x in optimal_path:
+    y = 'n'
+    y += str(x)
+    optimal_path1.append(y)
+
+for z in range(len(optimal_path1)):
+    if(optimal_path1[z] == 'n20'):
+        optimal_path1[z] = 'r0' 
+
+print(f"The optimal path is {optimal_path1}.")
 print(f"The optimal distance is {optimal_distance}.")
+
+import json
+result_dict = {"v0": {"path": optimal_path1}}
+
+result_json = json.dumps(result_dict, indent=2)
+
+with open("optimal_result.json", "w") as json_file:
+    json_file.write(result_json)
 
 
 # Level 1A
