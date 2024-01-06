@@ -58,3 +58,52 @@ for i in range(len(optimal_path)-1):
     dist += n1[i][i+1]
 print(f"The optimal path is {optimal_path}.")
 print(f"The optimal distance is {dist}.")
+
+# Level 1A
+
+def tsp_knapsack(adj_matrix, source, destination, weights, total_capacity):
+    n = len(adj_matrix)
+    visited = 1 << source
+    memo = {}
+    def tsp_masked(mask, pos):
+        if (mask, pos) in memo:
+            return memo[(mask, pos)]
+        
+        if mask == (1 << len(destination)) - 1:
+            return adj_matrix[pos][source], [pos, source]
+        
+        min_distance = sys.maxsize
+        optimal_path = []
+        
+        for i in range(len(destination)):
+            if not (mask & (1 << i)):
+                new_mask = mask | (1 << i)
+                new_pos = destination[i]
+                if weights[i] <= total_capacity:
+                    new_capacity = total_capacity - weights[i]
+                    distance, path = tsp_masked(new_mask, new_pos)
+                    distance += adj_matrix[pos][new_pos]
+                    if distance < min_distance:
+                        min_distance = distance
+                        optimal_path = [pos] + path
+                        memo[(mask, pos)] = (min_distance, optimal_path)
+        
+        return min_distance, optimal_path
+    
+    min_distance, optimal_path = tsp_masked(visited, source)
+    
+    return min_distance, optimal_path
+
+source_point = 0
+destination_points = [5,8,12,10,5,7,5]
+weights = [12,13,5,10,3,2,14]
+total_capacity = 35
+
+shortest_distance, optimal_path = tsp_knapsack(n1, source_point, destination_points, weights, total_capacity)
+
+print(f"Shortest Distance: {shortest_distance}")
+print("Optimal Path:", optimal_path)
+
+# Level 1B
+
+
