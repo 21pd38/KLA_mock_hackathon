@@ -20,3 +20,35 @@ n1 = [[0, 3366, 2290, 3118, 1345, 854, 1176, 1291, 1707, 2160, 1606, 702, 1820, 
      [1643, 1723, 647, 1475, 298, 789, 467, 352, 2646, 517, 325, 1085, 617, 2368, 195, 416, 1727, 0, 1231, 465],
      [2874, 492, 716, 778, 1529, 2020, 1698, 1583, 2189, 714, 1268, 2172, 1054, 1911, 1036, 1359, 642, 1231, 0, 1456],
      [1418, 1948, 872, 1700, 763, 682, 360, 127, 3111, 742, 790, 1550, 1082, 2833, 558, 881, 1952, 465, 1456, 0]]
+
+import sys
+
+def reduce_matrix(cost, n):
+    for i in range(n):
+        min_val = sys.maxsize
+        for j in range(n):
+            if cost[i][j] < min_val:
+                min_val = cost[i][j]
+        for j in range(n):
+            if cost[i][j] != sys.maxsize and cost[i][j] != 0:
+                cost[i][j] -= min_val
+
+def tsp(cost, n, c):
+    reduce_matrix(cost, n)
+    path = [c]
+    visited = [False] * n
+    visited[c] = True
+    for i in range(n-1):
+        min_val = sys.maxsize
+        next_node = -1
+        for j in range(n):
+            if not visited[j] and cost[path[-1]][j] < min_val:
+                min_val = cost[path[-1]][j]
+                next_node = j
+        path.append(next_node)
+        visited[next_node] = True
+        reduce_matrix(cost, n)
+    return path
+
+optimal_path = tsp(n1, len(n1[0]), 0)
+print(f"The optimal path is {optimal_path}.")
